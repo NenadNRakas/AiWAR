@@ -1,0 +1,51 @@
+﻿@page
+@using AiWAR.Models
+@model AiWAR.Pages.ItemModel
+@{
+    ViewData["Title"] = "Menu";
+}
+<div class="text-center">
+    <h1 class="display-4">🌤️⚡♻️ Config @ViewData["Title"] ♻️⚡🌤️</h1>
+    <form method="post" claass="card p-3">
+        <div class="row">
+            <div asp-validation-summary="All"></div>
+        </div>
+        <div class="form-group mb-0 align-middle">
+            <label asp-for="NewItem.Name" class="control-label">Name</label>
+            <input type="text" asp-for="NewItem.Name" class="mr-5">
+            <label asp-for="NewItem.Size">Size</label>
+            <select asp-for="NewItem.Size" asp-items="Html.GetEnumSelectList<ItemSize>()" class="mr-5"></select>
+            <label asp-for="NewItem.Price">Price</label>
+            <input asp-for="NewItem.Price" class="mr-5" />
+            <label asp-for="NewItem.IsOnStock">In Stock</label>
+            <input type="checkbox" asp-for="NewItem.IsOnStock" class="mr-5">
+            <button class="btn btn-primary">Add</button>
+        </div>
+    </form>
+    <table class="table mt-5">
+        <thead>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Price</th>
+                <th scope="col">Size</th>
+                <th scope="col">Stock</th>
+                <th scope="col">Delete</th>
+            </tr>
+        </thead>
+        @foreach (var item in Model.items)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>@($"{item.Price:C}")</td>
+                <td>@item.Size</td>
+                <td>@Model.StockText(item)</td>
+                <td>
+                    <form method="post" asp-page-handler="Delete" asp-route-id="@item.Id">
+                        <button class="btn btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </table>
+</div>
+@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
